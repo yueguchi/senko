@@ -1,5 +1,6 @@
 version: '3'
 services:
   python36-stretch:
+    tty: true
     build:
       context: ./python
