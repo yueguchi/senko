@@ -1,10 +1,19 @@
 version: '3'
 services:
-  python36-stretch:
+  senko-web:
+    build: ./senko-web
+    # localで使いたいportに適宜変える
+    ports:
+      - "9999:80"
+    links:
+      - senko-app
+    volumes:
+      - ./senko-app/project:/project
+  senko-app:
     tty: true
     build:
-      context: ./python
+      context: ./senko-app
     ports:
       - "5000:5000"
     volumes:
-      - ./python/code:/code
+      - ./senko-app/project:/project
