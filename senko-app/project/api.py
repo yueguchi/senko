@@ -1,17 +1,12 @@
-from flask import Flask
+# [参考] https://codeburst.io/jwt-authorization-in-flask-c63c1acf4eeb
+from flask import Flask, request
+from flask_restful import Api
+
 app = Flask(__name__)
+api = Api(app)
 
-@app.route("/")
-def hello():
-  return "Hello World!"
-
-@app.route("/hello")
-def hello2():
-  return "23"
-
-@app.route("/user/<username>")
-def show_user_profile(username):
-  return 'User %s' % username
+import resources
+api.add_resource(resources.HelloWorld, '/<string:msg>')
 
 if __name__ == '__main__':
   app.run(host="0.0.0.0", port=5000, debug=True)
