@@ -3,6 +3,9 @@
 """
 from api import db
 
+"""
+db.Modelを継承する
+"""
 class UserModel(db.Model):
     __tablename__ = 'users'
 
@@ -15,5 +18,5 @@ class UserModel(db.Model):
         db.session.commit()
 
     @classmethod
-    def find_by_username(cls, username):
-      return cls.query.filter_by(username = username).first()
+    def find_by_username(self, username):
+      return self.query.filter_by(username = username).first()
