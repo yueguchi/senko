@@ -15,5 +15,26 @@ services:
       context: ./senko-app
     ports:
       - "5000:5000"
+    environment:
+      - "DB_HOST=senko-db"
+      - "DB_DATABASE=senko"
+      - "DB_USER=root"
+      - "DB_PASSWORD=password"
     volumes:
       - ./senko-app/project:/project
+    # dbコンテナが立ち上がってからappを立ち上げる
+    depends_on:
+      - senko-db
+  # 本番はAuroraなので、不要
+  senko-db:
+    build: ./senko-db
+    command: mysqld --character-set-server=utf8 --character-set-client=utf8 --collation-server=utf8_unicode_ci
+    volumes:
+      - ./senko-db/volumes:/var/lib/mysql
+      - ./senko-db/custom.cnf:/etc/mysql/conf.d/custom.conf
+    environment:
+      - "MYSQL_DATABASE=senko"
+      - "MYSQL_USER=root"
+      - "MYSQL_ROOT_PASSWORD=password"
+    ports:
+        - "3306:3306"
