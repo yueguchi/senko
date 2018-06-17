@@ -1,12 +1,10 @@
 # [参考] https://codeburst.io/jwt-authorization-in-flask-c63c1acf4eeb
-"""
-ルーティング
-"""
 from flask import Flask, request
 from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
+# DB設定
 app.config.from_object('config.Config')
 db = SQLAlchemy(app)
 
@@ -14,6 +12,7 @@ db = SQLAlchemy(app)
 def create_tables():
     db.create_all()
 
+# ルーティング設定
 api = Api(app)
 import resources
 api.add_resource(resources.UserRegistration, '/users/regist')
