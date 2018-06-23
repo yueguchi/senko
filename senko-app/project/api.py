@@ -24,6 +24,7 @@ import resources
 api.add_resource(resources.UserRegistration, '/users/regist')
 api.add_resource(resources.UserLogin, '/users/login')
 api.add_resource(resources.AllUsers, '/users')
+api.add_resource(resources.TokenRefresh, '/users/refresh')
 api.add_resource(resources.Applicant, '/applicants')
 
 if __name__ == '__main__':

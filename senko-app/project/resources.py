@@ -38,6 +38,7 @@ class UserRegistration(Resource):
         except:
             return {'message': 'Something went wrong'}, 500
 
+
 """
 ログイン
 """
@@ -57,10 +58,24 @@ class UserLogin(Resource):
             'refresh_token': refresh_token
         }
 
+
+"""
+リフレッシュトークン
+Authorizationにrefresh_tokenを設定してrequestすることで、最新のaccess_tokenを返却する
+"""
+class TokenRefresh(Resource):
+    @jwt_refresh_token_required
+    def post(self):
+        current_user = get_jwt_identity()
+        access_token = create_access_token(identity = current_user)
+        return {'access_token': access_token}
+
+
 class AllUsers(Resource):
     @jwt_required
     def get(self):
         return UserModel.return_all()
+
 
 """
 応募者RESTクラス

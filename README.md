@@ -18,3 +18,11 @@ host:9999でnginx受け付けて、nginxからappサーバuwsgiに8080でproxy�
 uwsgiは8080で受けて、5000のflaskに接続する。
 443はALBからしか使われないので、この領域はhttpになる。local以外のostは:80になる。
 ```
+
+# jwt_tokenについて
+
+```
+デフォルトで
+access tokens 15分
+refresh tokens 30日
+```
