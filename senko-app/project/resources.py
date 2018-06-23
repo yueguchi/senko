@@ -2,7 +2,7 @@
 コントローラー
 """
 from flask_restful import Resource, reqparse
-from models import UserModel
+from models import UserModel, RevokedTokenModel
 from flask_jwt_extended import (create_access_token, create_refresh_token, jwt_required, jwt_refresh_token_required, get_jwt_identity, get_raw_jwt)
 
 parser = reqparse.RequestParser()
@@ -77,15 +77,26 @@ class AllUsers(Resource):
         return UserModel.return_all()
 
 
-"""
-応募者RESTクラス
-"""
-class Applicant(Resource):
-    def get(self):
-        return {'applicant': [1, 2, 3]}, 200
+class UserLogoutAccess(Resource):
+    @jwt_required
     def post(self):
-        return {'msg': 'created'}, 201
-    def patch(self):
-        return {'msg': 'modified'}, 200
-    def delete(self):
-        return {'msg': 'no content'}, 204
+        jti = get_raw_jwt()['jti']
+        try:
+            revoked_token = RevokedTokenModel(jti = jti)
+            revoked_token.add()
+            return {'message': 'Access token has been revoked'}
+        except:
+            return {'message': 'Something went wrong'}, 500
+
+
+class UserLogoutRefresh(Resource):
+    @jwt_refresh_token_required
+    def post(self):
+        jti = get_raw_jwt()['jti']
+        try:
+            revoked_token = RevokedTokenModel(jti = jti)
+            revoked_token.add()
+            return {'message': 'Refresh token has been revoked'}
+        except:
+            return {'message': 'Something went wrong'}, 500
+
