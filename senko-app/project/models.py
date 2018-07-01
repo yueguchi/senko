@@ -42,17 +42,17 @@ class UserModel(db.Model):
     User名検索: first
     """
     @classmethod
-    def find_by_username(self, username):
-      return self.query.filter_by(username = username).first()
+    def find_by_username(cls, username):
+      return cls.query.filter_by(username = username).first()
 
     @classmethod
-    def return_all(self):
+    def return_all(cls):
         def to_json(x):
             return {
                 'username': x.username,
                 'password': x.password
             }
-        return {"users": list(map(lambda x: to_json(x), self.query.all()))}
+        return {"users": list(map(lambda x: to_json(x), cls.query.all()))}
 
 
 class RevokedTokenModel(db.Model):
@@ -65,7 +65,7 @@ class RevokedTokenModel(db.Model):
         db.session.commit()
     
     @classmethod
-    def is_jti_blacklisted(self, jti):
-        query = self.query.filter_by(jti = jti).first()
+    def is_jti_blacklisted(cls, jti):
+        query = cls.query.filter_by(jti = jti).first()
         return bool(query)
 
