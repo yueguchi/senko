@@ -7,6 +7,7 @@ from flask_jwt_extended import JWTManager
 app = Flask(__name__)
 
 # JWT設定
+app.config['PROPAGATE_EXCEPTIONS'] = True
 app.config['JWT_SECRET_KEY'] = 'jwt-secret-string'
 app.config['JWT_BLACKLIST_ENABLED'] = True
 app.config['JWT_BLACKLIST_TOKEN_CHECKS'] = ['access', 'refresh']
