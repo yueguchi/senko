@@ -46,8 +46,10 @@ class UserLogin(Resource):
     def post(self):
         data = parser.parse_args()
         current_user = UserModel.find_by_username(data['username'])
-        if not current_user or not UserModel.verify_hash(data['password'], current_user.password):
+        if not current_user:
             return {'message': 'User {} doesn\'t exist'.format(data['username'])}, 401
+        elif not UserModel.verify_hash(data['password'], current_user.password):
+            return {'message': 'Invalid LoginError.'}, 401
 
         access_token = create_access_token(identity = data['username'])
         refresh_token = create_refresh_token(identity = data['username'])

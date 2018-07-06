@@ -15,11 +15,13 @@ services:
       context: ./senko-app
     ports:
       - "5000:5000"
+    # これらはECSのENVに記載する。
     environment:
       - "DB_HOST=senko-db"
       - "DB_DATABASE=senko"
       - "DB_USER=root"
       - "DB_PASSWORD=password"
+      - "JWT_SECRET_KEY=hogehogehogeglocal"
     volumes:
       - ./senko-app/project:/project
     # dbコンテナが立ち上がってからappを立ち上げる

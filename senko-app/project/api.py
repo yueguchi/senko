@@ -8,7 +8,7 @@ app = Flask(__name__)
 
 # JWT設定
 app.config['PROPAGATE_EXCEPTIONS'] = True
-app.config['JWT_SECRET_KEY'] = 'jwt-secret-string'
+app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY', 'jwt-secret-string')
 app.config['JWT_BLACKLIST_ENABLED'] = True
 app.config['JWT_BLACKLIST_TOKEN_CHECKS'] = ['access', 'refresh']
 jwt = JWTManager(app)
@@ -46,6 +46,6 @@ def error_handler(error):
     msg = 'Error: {code}'.format(code=error.code)
     return jsonify({"message": msg}), 404
 
-# TODO 「os.getenv('APP_ENV', 'prod') ? True : False」でdebug指定
+
 if __name__ == '__main__':
   app.run(host="0.0.0.0", port=5000, debug=True)
