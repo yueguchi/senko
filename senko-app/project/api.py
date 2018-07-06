@@ -3,6 +3,7 @@ from flask import Flask, request, jsonify
 from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager
+import os
 
 app = Flask(__name__)
 
@@ -29,6 +30,14 @@ def check_if_token_in_blacklist(decrypted_token):
     jti = decrypted_token['jti']
     return models.RevokedTokenModel.is_jti_blacklisted(jti)
 
+
+# access_tokenに付加情報をつけたい時に使う。@jwt_requiredの中でclaims = get_jwt_claims() -> claims['hello']で参照できる。
+# @jwt.user_claims_loader
+# def add_claims_to_access_token(identity):
+#     return {
+#         'hello': identity,
+#         'foo': ['bar', 'baz']
+#     }
 
 # ルーティング設定
 api = Api(app)
