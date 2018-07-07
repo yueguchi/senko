@@ -26,3 +26,13 @@ uwsgiは8080で受けて、5000のflaskに接続する。
 access tokens 15分
 refresh tokens 30日
 ```
+
+# redis
+
+```
+import redis
+r = redis.StrictRedis(host='senko-redis', port=6379, db=0)
+r.set("KEY", "VALUE")
+print(r.get("KEY").decode())
+```
+

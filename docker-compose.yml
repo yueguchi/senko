@@ -9,12 +9,18 @@ services:
       - senko-app
     volumes:
       - ./senko-app/project:/project
+  senko-redis:
+    image: redis:4.0
+    ports:
+      - "6379:6379"
   senko-app:
     tty: true
     build:
       context: ./senko-app
     ports:
       - "5000:5000"
+    links:
+      - senko-redis
     # これらはECSのENVに記載する。
     environment:
       - "DB_HOST=senko-db"
