@@ -14,8 +14,8 @@ parser = reqparse.RequestParser()
 parser.add_argument('username', help = 'This field cannot be blank', required = True)
 parser.add_argument('password', help = 'This field cannot be blank', required = True)
 
-# ブラックリストreddisの期限(1日にしてるけど、1ヶ月でもいいかも)
-ACCESS_EXPIRES = timedelta(minutes=1440)
+# ブラックリストreddisの期限(1ヶ月)
+ACCESS_EXPIRES = timedelta(minutes=43200)
 
 """
 登録
