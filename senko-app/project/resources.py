@@ -15,7 +15,8 @@ parser.add_argument('username', help = 'This field cannot be blank', required = 
 parser.add_argument('password', help = 'This field cannot be blank', required = True)
 
 # ブラックリストreddisの期限(1ヶ月)
-ACCESS_EXPIRES = timedelta(minutes=43200)
+ACCESS_EXPIRES = timedelta(days=30)
+
 
 """
 登録
@@ -86,6 +87,10 @@ class AllUsers(Resource):
         return UserModel.return_all()
 
 
+"""
+ログアウト
+redisに今使っているtokenを無効なtokenとして格納する
+"""
 class UserLogoutAccess(Resource):
     @jwt_required
     def post(self):

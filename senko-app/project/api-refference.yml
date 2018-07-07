@@ -6,19 +6,21 @@ info:
   contact:
     email: "eguchi@asial.co.jp"
 host: "senko-asial.com"
-basePath: "/apiv1/"
+basePath: "/api/v1/"
 tags:
-- name: "person"
+- name: "auth"
+  description: "認証"
+- name: "applicants"
   description: "応募者"
 schemes:
 - "https"
 paths:
-  /person:
+  /users/login:
     post:
       tags:
-      - "person"
-      summary: "応募者登録"
-      description: "応募者の新規登録"
+      - "auth"
+      summary: "ログイン"
+      description: "アクセストークン(15分)、リフレッシュトークン(30日)を返却する。<BR>以降、AuthorizationヘッダにBearerトークンを付与して使用する。"
       consumes:
       - "application/json"
       produces:
@@ -28,16 +30,50 @@ paths:
         name: "body"
         required: true
         schema:
-          $ref: "#/definitions/Person"
+          $ref: "#/definitions/UserLogin"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Token"
+        400:
+          description: "parameter error"
+        401:
+          description: "unauthorised token error"
+        422:
+          description: "unauthorised token error"
+        500:
+          description: "internal server error"
+  /applicants:
+    post:
+      tags:
+      - "applicants"
+      summary: "応募者登録"
+      description: "応募者の新規登録"
+      consumes:
+      - "multipart/form-data"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/ApplicantPost"
       responses:
         201:
-          description: "person created."
+          description: "created."
         400:
-          description: "Invalid ID supplied"
-  /person/list:
+          description: "parameter error"
+        401:
+          description: "unauthorised token error"
+        422:
+          description: "unauthorised token error"
+        500:
+          description: "internal server error"
     get:
       tags:
-      - "person"
+      - "applicants"
       summary: "応募者一覧取得"
       description: "応募者一覧取得 ページ指定 件数指定"
       produces:
@@ -61,13 +97,13 @@ paths:
           schema:
             type: "array"
             items:
-              $ref: "#/definitions/Person"
+              $ref: "#/definitions/Applicant"
         400:
           description: "Invalid tag value"
   /person/list/search/{word}:
     get:
       tags:
-      - "person"
+      - "applicants"
       summary: "応募者フリーワード検索"
       description: "応募者一覧取得 部分一致検索"
       produces:
@@ -84,23 +120,98 @@ paths:
           schema:
             type: "array"
             items:
-              $ref: "#/definitions/Person"
+              $ref: "#/definitions/Applicant"
         400:
           description: "Invalid tag value"
 definitions:
-  Person:
+  Token:
+    type: "object"
+    example:
+      message: Logged in as taro
+      access_token: eyJ0eXAiOiJ...
+      refresh_token: eyJ0eXAiOi...
+      
+  UserLogin:
+    type: "object"
+    required:
+    - "id"
+    - "password"
+    - "service_id"
+    properties:
+      id:
+        type: "string"
+        example: "eguchi@asial.co.jp"
+      password:
+        type: "string"
+        example: "hogehogehoge"
+      service_id:
+        type: "string"
+        example: "asial"
+  ApplicantPost:
+    type: "object"
+    required:
+    - "name"
+    - "sex"
+    - "birth"
+    - "reason"
+    - "paper"
+    - "address"
+    properties:
+      name:
+        type: "string"
+        example: "田中 太郎"
+      sex:
+        type: "integer"
+        example: 1
+      birth:
+        type: "string"
+        example: "1986-05-26"
+      address:
+        type: "string"
+        example: "東京都町田市***町2-2-1"
+      zip1:
+        type: "integer"
+        example: 220
+      zip2:
+        type: "integer"
+        example: 1412
+      highschool:
+        type: "string"
+        example: "東京都立豊多摩高等学校"
+      university:
+        type: "string"
+        example: "立教大学文学部史学科"
+      reason:
+        type: "string"
+        example: "志望動機"
+      pr:
+        type: "string"
+        example: "自己PR"
+      other:
+        type: "string"
+        example: "その他・備考"
+      face_url:
+        type: string
+        format: binary
+        example: "multipart form data"
+      paper:
+        type: string
+        format: binary
+        example: "multipart form data"
+
+  Applicant:
     type: "object"
     required:
     - "name"
     - "address"
     properties:
-      id:
+      applicant_id:
         type: "integer"
         format: "int64"
       name:
         type: "string"
         example: "田中 太郎"
-      photoUrl:
+      photo_url:
         type: "string"
         example: "http://hogegoge/pic/111"
       status:
@@ -115,4 +226,4 @@ definitions:
         - "ok"
         - "ng"
     xml:
-      name: "Pet"
+      name: "Senko"
