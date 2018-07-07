@@ -30,9 +30,17 @@ refresh tokens 30日
 # redis
 
 ```
+▼senko-app(python)
+
 import redis
 r = redis.StrictRedis(host='senko-redis', port=6379, db=0)
 r.set("KEY", "VALUE")
 print(r.get("KEY").decode())
+
+▼redisコンテナ
+$ docker exec -it **** bash
+root@cc364fe05b17:/data# redis-cli 
+127.0.0.1:6379> get KEY
+"VALUE"
 ```
 

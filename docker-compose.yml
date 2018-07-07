@@ -10,7 +10,7 @@ services:
     volumes:
       - ./senko-app/project:/project
   senko-redis:
-    image: redis:4.0
+    build: ./senko-redis
     ports:
       - "6379:6379"
   senko-app:
