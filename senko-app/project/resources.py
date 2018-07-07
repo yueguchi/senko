@@ -1,14 +1,21 @@
 """
 コントローラー
 """
+import redis
+from datetime import timedelta
 from flask_restful import Resource, reqparse
-from models import UserModel, RevokedTokenModel
+from models import UserModel
 from flask_jwt_extended import (create_access_token, create_refresh_token, jwt_required, jwt_refresh_token_required, get_jwt_identity, get_raw_jwt)
+
+# 使い終わったtokenはredisに期限つき自動削除で突っ込む
+revoked_store = redis.StrictRedis(host='senko-redis', port=6379, db=0, decode_responses=True)
 
 parser = reqparse.RequestParser()
 parser.add_argument('username', help = 'This field cannot be blank', required = True)
 parser.add_argument('password', help = 'This field cannot be blank', required = True)
 
+# ブラックリストreddisの期限(1日にしてるけど、1ヶ月でもいいかも)
+ACCESS_EXPIRES = timedelta(minutes=1440)
 
 """
 登録
@@ -84,21 +91,7 @@ class UserLogoutAccess(Resource):
     def post(self):
         jti = get_raw_jwt()['jti']
         try:
-            revoked_token = RevokedTokenModel(jti = jti)
-            revoked_token.add()
+            revoked_store.set(jti, 'true', ACCESS_EXPIRES)
             return {'message': 'Access token has been revoked'}
         except:
             return {'message': 'Something went wrong'}, 500
-
-
-class UserLogoutRefresh(Resource):
-    @jwt_refresh_token_required
-    def post(self):
-        jti = get_raw_jwt()['jti']
-        try:
-            revoked_token = RevokedTokenModel(jti = jti)
-            revoked_token.add()
-            return {'message': 'Refresh token has been revoked'}
-        except:
-            return {'message': 'Something went wrong'}, 500
-

@@ -24,11 +24,18 @@ def create_tables():
 
 
 # tokenブラックリストチェック
-import models
+import redis
+from datetime import timedelta
+# 使い終わったtokenはredisに期限つき自動削除で突っ込む
+revoked_store = redis.StrictRedis(host='senko-redis', port=6379, db=0, decode_responses=True)
+
 @jwt.token_in_blacklist_loader
 def check_if_token_in_blacklist(decrypted_token):
     jti = decrypted_token['jti']
-    return models.RevokedTokenModel.is_jti_blacklisted(jti)
+    entry = revoked_store.get(jti)
+    if entry is None:
+        return False
+    return True
 
 
 # access_tokenに付加情報をつけたい時に使う。@jwt_requiredの中でclaims = get_jwt_claims() -> claims['hello']で参照できる。
@@ -47,7 +54,6 @@ api.add_resource(resources.UserLogin, '/users/login')
 api.add_resource(resources.AllUsers, '/users')
 api.add_resource(resources.TokenRefresh, '/users/refresh')
 api.add_resource(resources.UserLogoutAccess, '/users/logout')
-api.add_resource(resources.UserLogoutRefresh, '/users/refresh/logout')
 
 # エラーハンドラ
 @app.errorhandler(404)
