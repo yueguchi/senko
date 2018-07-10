@@ -2,6 +2,7 @@
 コントローラー
 """
 import redis
+import datetime
 from datetime import timedelta
 from flask_restful import Resource, reqparse
 from models import UserModel
@@ -11,7 +12,8 @@ from flask_jwt_extended import (create_access_token, create_refresh_token, jwt_r
 revoked_store = redis.StrictRedis(host='senko-redis', port=6379, db=0, decode_responses=True)
 
 parser = reqparse.RequestParser()
-parser.add_argument('username', help = 'This field cannot be blank', required = True)
+parser.add_argument('email', help = 'This field cannot be blank', required = True)
+parser.add_argument('username', help = 'This field cannot be blank', required = False)
 parser.add_argument('password', help = 'This field cannot be blank', required = True)
 
 # ブラックリストreddisの期限(1ヶ月)
@@ -25,21 +27,25 @@ class UserRegistration(Resource):
     def post(self):
         data = parser.parse_args()
 
-        if UserModel.find_by_username(data['username']):
-            return {'message': 'User {} already exists'. format(data['username'])}
+        if UserModel.find_by_email(data['email']):
+            return {'message': 'User {} already exists'. format(data['email'])}
 
         new_user = UserModel(
+            email = data['email'],
             username = data['username'],
-            password = UserModel.generate_hash(data['password'])
+            password = UserModel.generate_hash(data['password']),
+            # TODO これがあるとエラー...
+            # created_at = datetime.datetime.now,
+            # updated_at = datetime.datetime.now
         )
         try:
             new_user.save_to_db()
 
-            access_token = create_access_token(identity = data['username'])
-            refresh_token = create_refresh_token(identity = data['username'])
+            access_token = create_access_token(identity = data['email'])
+            refresh_token = create_refresh_token(identity = data['email'])
 
             return {
-                'message': 'User {} was created'.format(data['username']),
+                'message': 'User {} was created'.format(data['email']),
                 'access_token': access_token,
                 'refresh_token': refresh_token
             }, 201
@@ -53,17 +59,17 @@ class UserRegistration(Resource):
 class UserLogin(Resource):
     def post(self):
         data = parser.parse_args()
-        current_user = UserModel.find_by_username(data['username'])
+        current_user = UserModel.find_by_email(data['email'])
         if not current_user:
-            return {'message': 'User {} doesn\'t exist'.format(data['username'])}, 401
+            return {'message': 'User {} doesn\'t exist'.format(data['email'])}, 401
         elif not UserModel.verify_hash(data['password'], current_user.password):
             return {'message': 'Invalid LoginError.'}, 401
 
-        access_token = create_access_token(identity = data['username'])
-        refresh_token = create_refresh_token(identity = data['username'])
+        access_token = create_access_token(identity = data['email'])
+        refresh_token = create_refresh_token(identity = data['email'])
 
         return {
-            'message': 'Logged in as {}'.format(current_user.username),
+            'message': 'Logged in as {}'.format(current_user.email),
             'access_token': access_token,
             'refresh_token': refresh_token
         }

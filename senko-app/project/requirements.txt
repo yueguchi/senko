@@ -1,5 +1,6 @@
 aniso8601==3.0.0
 click==6.7
+decorator==4.3.0
 Flask==1.0.2
 Flask-JWT-Extended==3.10.0
 Flask-RESTful==0.3.6
@@ -8,11 +9,15 @@ itsdangerous==0.24
 Jinja2==2.10
 MarkupSafe==1.0
 passlib==1.7.1
+pbr==4.1.0
 PyJWT==1.6.4
 PyMySQL==0.8.1
 pytz==2018.4
 redis==2.10.6
 six==1.11.0
 SQLAlchemy==1.2.8
+sqlalchemy-migrate==0.11.0
+sqlparse==0.2.4
+Tempita==0.5.2
 uWSGI==2.0.17
 Werkzeug==0.14.1

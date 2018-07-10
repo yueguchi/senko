@@ -18,9 +18,10 @@ jwt = JWTManager(app)
 app.config.from_object('config.Config')
 db = SQLAlchemy(app)
 
-@app.before_first_request
-def create_tables():
-    db.create_all()
+# sqlarchemy-migrateに移行した
+# @app.before_first_request
+# def create_tables():
+#     db.create_all()
 
 
 # tokenブラックリストチェック

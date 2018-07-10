@@ -1,0 +1,49 @@
+== Info: Rebuilt URL to: POST/
+== Info: Could not resolve host: POST
+== Info: Closing connection 0
+== Info:   Trying ::1...
+== Info: TCP_NODELAY set
+== Info: Connected to localhost (::1) port 9999 (#1)
+=> Send header, 143 bytes (0x8f)
+0000: 50 4f 53 54 20 2f 75 73 65 72 73 2f 72 65 67 69 POST /users/regi
+0010: 73 74 20 48 54 54 50 2f 31 2e 31 0d 0a 48 6f 73 st HTTP/1.1..Hos
+0020: 74 3a 20 6c 6f 63 61 6c 68 6f 73 74 3a 39 39 39 t: localhost:999
+0030: 39 0d 0a 55 73 65 72 2d 41 67 65 6e 74 3a 20 63 9..User-Agent: c
+0040: 75 72 6c 2f 37 2e 35 34 2e 30 0d 0a 41 63 63 65 url/7.54.0..Acce
+0050: 70 74 3a 20 2a 2f 2a 0d 0a 43 6f 6e 74 65 6e 74 pt: */*..Content
+0060: 2d 74 79 70 65 3a 20 61 70 70 6c 69 63 61 74 69 -type: applicati
+0070: 6f 6e 2f 6a 73 6f 6e 0d 0a 43 6f 6e 74 65 6e 74 on/json..Content
+0080: 2d 4c 65 6e 67 74 68 3a 20 36 37 0d 0a 0d 0a    -Length: 67....
+=> Send data, 67 bytes (0x43)
+0000: 7b 22 65 6d 61 69 6c 22 3a 20 22 74 65 73 74 40 {"email": "test@
+0010: 65 6d 61 69 6c 2e 63 6f 6d 22 2c 20 22 75 73 65 email.com", "use
+0020: 72 6e 61 6d 65 22 3a 20 22 74 65 73 74 22 2c 20 rname": "test", 
+0030: 22 70 61 73 73 77 6f 72 64 22 3a 20 22 74 65 73 "password": "tes
+0040: 74 22 7d                                        t"}
+== Info: upload completely sent off: 67 out of 67 bytes
+<= Recv header, 36 bytes (0x24)
+0000: 48 54 54 50 2f 31 2e 31 20 35 30 30 20 49 4e 54 HTTP/1.1 500 INT
+0010: 45 52 4e 41 4c 20 53 45 52 56 45 52 20 45 52 52 ERNAL SERVER ERR
+0020: 4f 52 0d 0a                                     OR..
+<= Recv header, 15 bytes (0xf)
+0000: 53 65 72 76 65 72 3a 20 6e 67 69 6e 78 0d 0a    Server: nginx..
+<= Recv header, 37 bytes (0x25)
+0000: 44 61 74 65 3a 20 54 75 65 2c 20 31 30 20 4a 75 Date: Tue, 10 Ju
+0010: 6c 20 32 30 31 38 20 31 33 3a 33 39 3a 32 37 20 l 2018 13:39:27 
+0020: 47 4d 54 0d 0a                                  GMT..
+<= Recv header, 32 bytes (0x20)
+0000: 43 6f 6e 74 65 6e 74 2d 54 79 70 65 3a 20 61 70 Content-Type: ap
+0010: 70 6c 69 63 61 74 69 6f 6e 2f 6a 73 6f 6e 0d 0a plication/json..
+<= Recv header, 20 bytes (0x14)
+0000: 43 6f 6e 74 65 6e 74 2d 4c 65 6e 67 74 68 3a 20 Content-Length: 
+0010: 33 36 0d 0a                                     36..
+<= Recv header, 24 bytes (0x18)
+0000: 43 6f 6e 6e 65 63 74 69 6f 6e 3a 20 6b 65 65 70 Connection: keep
+0010: 2d 61 6c 69 76 65 0d 0a                         -alive..
+<= Recv header, 2 bytes (0x2)
+0000: 0d 0a                                           ..
+<= Recv data, 36 bytes (0x24)
+0000: 7b 22 6d 65 73 73 61 67 65 22 3a 20 22 53 6f 6d {"message": "Som
+0010: 65 74 68 69 6e 67 20 77 65 6e 74 20 77 72 6f 6e ething went wron
+0020: 67 22 7d 0a                                     g"}.
+== Info: Connection #1 to host localhost left intact

@@ -1,6 +1,7 @@
 """
 モデル
 """
+import datetime
 from api import db
 from passlib.hash import pbkdf2_sha256 as sha256
 
@@ -13,8 +14,13 @@ class UserModel(db.Model):
     """
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key = True)
-    username = db.Column(db.String(120), unique = True, nullable = False)
+    email = db.Column(db.String(255), unique = True, nullable = False)
+    username = db.Column(db.String(255), unique = False, nullable = False)
     password = db.Column(db.String(120), nullable = False)
+    # TODO これがあるとエラー...
+    # created_at = db.Column(db.DateTime, nullable=False, default=datetime.datetime.now)
+    # updated_at = db.Column(db.DateTime, nullable=False, onupdate=datetime.datetime.now)
+
 
     @staticmethod
     def generate_hash(password):
@@ -42,14 +48,14 @@ class UserModel(db.Model):
     User名検索: first
     """
     @classmethod
-    def find_by_username(cls, username):
-      return cls.query.filter_by(username = username).first()
+    def find_by_email(cls, email):
+      return cls.query.filter_by(email = email).first()
 
     @classmethod
     def return_all(cls):
         def to_json(x):
             return {
-                'username': x.username,
+                'email': x.email,
                 'password': x.password
             }
         return {"users": list(map(lambda x: to_json(x), cls.query.all()))}
