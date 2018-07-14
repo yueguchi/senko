@@ -27,6 +27,7 @@ services:
       - "DB_DATABASE=senko"
       - "DB_USER=root"
       - "DB_PASSWORD=password"
+      - "DB_SECRET_KEY=secre-key-string"
       - "JWT_SECRET_KEY=hogehogehogeglocal"
     volumes:
       - ./senko-app/project:/project

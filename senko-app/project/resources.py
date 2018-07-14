@@ -38,19 +38,16 @@ class UserRegistration(Resource):
             # created_at = datetime.datetime.now,
             # updated_at = datetime.datetime.now
         )
-        try:
-            new_user.save_to_db()
+        new_user.save_to_db()
 
-            access_token = create_access_token(identity = data['email'])
-            refresh_token = create_refresh_token(identity = data['email'])
+        access_token = create_access_token(identity = data['email'])
+        refresh_token = create_refresh_token(identity = data['email'])
 
-            return {
-                'message': 'User {} was created'.format(data['email']),
-                'access_token': access_token,
-                'refresh_token': refresh_token
-            }, 201
-        except:
-            return {'message': 'Something went wrong'}, 500
+        return {
+            'message': 'User {} was created'.format(data['email']),
+            'access_token': access_token,
+            'refresh_token': refresh_token
+        }, 201
 
 
 """
@@ -101,8 +98,5 @@ class UserLogoutAccess(Resource):
     @jwt_required
     def post(self):
         jti = get_raw_jwt()['jti']
-        try:
-            revoked_store.set(jti, 'true', ACCESS_EXPIRES)
-            return {'message': 'Access token has been revoked'}
-        except:
-            return {'message': 'Something went wrong'}, 500
+        revoked_store.set(jti, 'true', ACCESS_EXPIRES)
+        return {'message': 'Access token has been revoked'}

@@ -5,6 +5,9 @@ import datetime
 from api import db
 from passlib.hash import pbkdf2_sha256 as sha256
 
+# スキーマ情報をmigrationから取得することで、modelに書かなくて済む
+db.reflect()
+
 """
 db.Modelを継承する
 """
@@ -13,14 +16,6 @@ class UserModel(db.Model):
     DB定義
     """
     __tablename__ = 'users'
-    id = db.Column(db.Integer, primary_key = True)
-    email = db.Column(db.String(255), unique = True, nullable = False)
-    username = db.Column(db.String(255), unique = False, nullable = False)
-    password = db.Column(db.String(120), nullable = False)
-    # TODO これがあるとエラー...
-    # created_at = db.Column(db.DateTime, nullable=False, default=datetime.datetime.now)
-    # updated_at = db.Column(db.DateTime, nullable=False, onupdate=datetime.datetime.now)
-
 
     @staticmethod
     def generate_hash(password):

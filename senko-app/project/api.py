@@ -18,6 +18,13 @@ jwt = JWTManager(app)
 app.config.from_object('config.Config')
 db = SQLAlchemy(app)
 
+## 例外時にrollbackさせる
+@app.teardown_request
+def teardown_request(exception):
+    if exception:
+        db.session.rollback()
+    db.session.remove()
+
 # sqlarchemy-migrateに移行した
 # @app.before_first_request
 # def create_tables():
@@ -38,15 +45,6 @@ def check_if_token_in_blacklist(decrypted_token):
         return False
     return True
 
-
-# access_tokenに付加情報をつけたい時に使う。@jwt_requiredの中でclaims = get_jwt_claims() -> claims['hello']で参照できる。
-# @jwt.user_claims_loader
-# def add_claims_to_access_token(identity):
-#     return {
-#         'hello': identity,
-#         'foo': ['bar', 'baz']
-#     }
-
 # ルーティング設定
 api = Api(app)
 import resources
@@ -59,8 +57,11 @@ api.add_resource(resources.UserLogoutAccess, '/users/logout')
 # エラーハンドラ
 @app.errorhandler(404)
 def error_handler(error):
-    msg = 'Error: {code}'.format(code=error.code)
-    return jsonify({"message": msg}), 404
+    return jsonify({'message': 'Not Found.'}), 404
+
+@app.errorhandler(500)
+def error_handler(error):
+    return jsonify({'message': 'Internal ServerError.'}), 500
 
 
 if __name__ == '__main__':

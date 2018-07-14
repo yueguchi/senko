@@ -10,7 +10,7 @@ class DevelopmentConfig:
         'host': os.getenv('DB_HOST', 'localhost'),
         'database': os.getenv('DB_DATABASE', 'senko'),
     })
-    # SQLALCHEMY_DATABASE_URI = 'sqlite:///app.db'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SECRET_KEY = 'some-secret-string'
+    SECRET_KEY = os.getenv('DB_SECRET_KEY', 'some-secret-string')
+
 Config = DevelopmentConfig
