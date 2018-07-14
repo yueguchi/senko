@@ -5,7 +5,7 @@ import redis
 import datetime
 from datetime import timedelta
 from flask_restful import Resource, reqparse
-from models import UserModel
+from models.user import UserModel
 from flask_jwt_extended import (create_access_token, create_refresh_token, jwt_required, jwt_refresh_token_required, get_jwt_identity, get_raw_jwt)
 
 # 使い終わったtokenはredisに期限つき自動削除で突っ込む

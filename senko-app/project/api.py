@@ -47,12 +47,17 @@ def check_if_token_in_blacklist(decrypted_token):
 
 # ルーティング設定
 api = Api(app)
-import resources
-api.add_resource(resources.UserRegistration, '/users/regist')
-api.add_resource(resources.UserLogin, '/users/login')
-api.add_resource(resources.AllUsers, '/users')
-api.add_resource(resources.TokenRefresh, '/users/refresh')
-api.add_resource(resources.UserLogoutAccess, '/users/logout')
+from controllers import user_controller
+from controllers import applicant_controller
+
+# user
+api.add_resource(user_controller.UserRegistration, '/user')
+api.add_resource(user_controller.UserLogin, '/user/login')
+api.add_resource(user_controller.AllUsers, '/users')
+api.add_resource(user_controller.TokenRefresh, '/user/refresh')
+api.add_resource(user_controller.UserLogoutAccess, '/user/logout')
+# applicant
+api.add_resource(applicant_controller.ApplicantRegistration, '/applicant')
 
 # エラーハンドラ
 @app.errorhandler(404)
