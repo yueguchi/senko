@@ -44,3 +44,14 @@ root@cc364fe05b17:/data# redis-cli
 "VALUE"
 ```
 
+# migration
+
+```
+▼migrate
+# python manage.py version_control
+# python manage.py upgrade[ or downgrade]
+
+▼Add
+# python manage.py script "add hoges table"
+```
+

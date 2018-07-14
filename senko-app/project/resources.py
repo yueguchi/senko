@@ -33,10 +33,7 @@ class UserRegistration(Resource):
         new_user = UserModel(
             email = data['email'],
             username = data['username'],
-            password = UserModel.generate_hash(data['password']),
-            # TODO これがあるとエラー...
-            # created_at = datetime.datetime.now,
-            # updated_at = datetime.datetime.now
+            password = UserModel.generate_hash(data['password'])
         )
         new_user.save_to_db()
 
