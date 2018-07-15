@@ -1,10 +1,12 @@
 """
 コントローラー
 """
+from flask import request
 from flask_restful import Resource, reqparse
 from models.applicant import ApplicantModel
 from datetime import datetime
 from flask_jwt_extended import (jwt_required)
+from utils.file_util import convert_pdf_to_txt, get_noun_list_from_word
 
 parser = reqparse.RequestParser()
 parser.add_argument('name', help = 'This field cannot be blank', required = True)
@@ -23,6 +25,13 @@ class ApplicantRegistration(Resource):
     @jwt_required
     def post(self):
         data = parser.parse_args()
+        resume_word = ''
+        if 'resume1' in request.files:
+            file = request.files['resume1']
+            filePath = '/tmp/{}'.format(file.filename)
+            file.save(filePath)
+            noun_list = get_noun_list_from_word(convert_pdf_to_txt(filePath))
+            janome_word = ','.join(noun_list)
         applicant = ApplicantModel(
             name = data['name'],
             email = data['email'],
@@ -32,8 +41,8 @@ class ApplicantRegistration(Resource):
             zip1 = data['zip1'] if 'zip1' in data else None,
             zip2 = data['zip2'] if 'zip2' in data else None,
             final_education = data['final_education'] if 'final_education' in data else None,
-            reason = data['reason'] if 'reason' in data else None
-            # if 'resume1' in data else 
+            reason = data['reason'] if 'reason' in data else None,
+            janome_word = janome_word
         )
         applicant.save_to_db()
 

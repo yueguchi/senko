@@ -16,6 +16,7 @@ applicants = Table(
         Column('zip2', String(255), nullable=True),
         Column('final_education', String(255), nullable=True),
         Column('reason', String(2000), nullable=True),
+        Column('janome_word', Text, nullable=True),
         Column('created_at', DateTime, nullable=False, server_default=text('CURRENT_TIMESTAMP')),
         Column('updated_at', DateTime, nullable=False, server_default=text('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'))
 )
