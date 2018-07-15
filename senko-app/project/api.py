@@ -51,6 +51,10 @@ api = Api(app)
 from controllers import user_controller
 from controllers import applicant_controller
 
+# healthcheck
+@app.route('/healthy')
+def index():
+    return 'healthy'
 
 # user
 api.add_resource(user_controller.UserRegistration, '/user')
@@ -75,4 +79,4 @@ def error_handler(error):
 
 
 if __name__ == '__main__':
-  app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=True)
