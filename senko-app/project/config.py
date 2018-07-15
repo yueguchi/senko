@@ -12,5 +12,6 @@ class DevelopmentConfig:
     })
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SECRET_KEY = os.getenv('DB_SECRET_KEY', 'some-secret-string')
+    SQLALCHEMY_ECHO = True
 
 Config = DevelopmentConfig

@@ -45,24 +45,29 @@ def check_if_token_in_blacklist(decrypted_token):
         return False
     return True
 
+
 # ルーティング設定
 api = Api(app)
 from controllers import user_controller
 from controllers import applicant_controller
 
+
 # user
 api.add_resource(user_controller.UserRegistration, '/user')
 api.add_resource(user_controller.UserLogin, '/user/login')
-api.add_resource(user_controller.AllUsers, '/users')
+api.add_resource(user_controller.AllUsers, '/user/list')
 api.add_resource(user_controller.TokenRefresh, '/user/refresh')
 api.add_resource(user_controller.UserLogoutAccess, '/user/logout')
 # applicant
 api.add_resource(applicant_controller.ApplicantRegistration, '/applicant')
+api.add_resource(applicant_controller.ApplicantList, '/applicant/<int:limit>/<int:page>')
+
 
 # エラーハンドラ
 @app.errorhandler(404)
 def error_handler(error):
     return jsonify({'message': 'Not Found.'}), 404
+
 
 @app.errorhandler(500)
 def error_handler(error):

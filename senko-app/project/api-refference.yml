@@ -1,6 +1,6 @@
 swagger: "2.0"
 info:
-  description: "書類選考自動化API"
+  description: "書類選考自動化API<BR>ログイン後に取得されるaccess_tokenをAuthorization Bearerヘッダにセットする。<BR>access_tokenは15分。refresh_tokenは30日<BR>ログアウト後は対象のtokenは禁止tokenとしてredisに保存される"
   version: "0.0.1"
   title: "senko"
   contact:
@@ -10,12 +10,77 @@ basePath: "/api/v1/"
 tags:
 - name: "auth"
   description: "認証"
+- name: "users"
+  description: "アプリ利用者管理"
 - name: "applicants"
-  description: "応募者"
+  description: "応募者管理"
 schemes:
 - "https"
 paths:
-  /users/login:
+  /user:
+    post:
+      tags:
+      - "users"
+      summary: "ユーザー登録"
+      description: "アクセストークン(15分)、リフレッシュトークン(30日)を返却する。"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/UserRegist"
+      responses:
+        201:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Token"
+        400:
+          description: "parameter error"
+        401:
+          description: "unauthorised token error"
+        422:
+          description: "unauthorised token error"
+        500:
+          description: "internal server error"
+  /user/list/{limit}/{page}:
+    get:
+      tags:
+      - "users"
+      summary: "ユーザー一覧"
+      description: "ユーザー一覧。TODO ページング"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+        - name: page
+          in: path
+          description: "ページ番号"
+          required: true
+          type: integer
+        - name: limit
+          in: path
+          description: "取得件数"
+          required: true
+          type: integer
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/UserList"
+        400:
+          description: "parameter error"
+        401:
+          description: "unauthorised token error"
+        422:
+          description: "unauthorised token error"
+        500:
+          description: "internal server error"
+  /user/login:
     post:
       tags:
       - "auth"
@@ -44,7 +109,35 @@ paths:
           description: "unauthorised token error"
         500:
           description: "internal server error"
-  /applicants:
+  /user/logout:
+    post:
+      tags:
+      - "auth"
+      summary: "ログアウト"
+      description: "access_tokenをrevoked状態にする。tokenはredisに詰められる。ログアウトを実施する。"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+        - in: header
+          name: Authorization:Bearer {access_token}
+          type: string
+          required: true
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/TokenRevoked"
+        400:
+          description: "parameter error"
+        401:
+          description: "unauthorised token error"
+        422:
+          description: "unauthorised token error"
+        500:
+          description: "internal server error"
+  /applicant:
     post:
       tags:
       - "applicants"
@@ -55,6 +148,10 @@ paths:
       produces:
       - "application/json"
       parameters:
+      - in: header
+        name: Authorization:Bearer {access_token}
+        type: string
+        required: true
       - in: "body"
         name: "body"
         required: true
@@ -71,65 +168,86 @@ paths:
           description: "unauthorised token error"
         500:
           description: "internal server error"
+  /applicant/list/{limit}/{page}:
     get:
       tags:
       - "applicants"
-      summary: "応募者一覧取得"
-      description: "応募者一覧取得 ページ指定 件数指定"
+      summary: "応募者一覧"
+      description: "応募者一覧"
+      consumes:
+      - "application/json"
       produces:
       - "application/json"
       parameters:
-      - name: "limit"
-        in: "query"
-        description: "取得件数"
-        required: false
-        type: "integer"
-        default: 20
-      - name: "page"
-        in: "query"
-        description: "ページ"
-        required: false
-        type: "integer"
-        default: 1
+        - in: header
+          name: Authorization:Bearer {access_token}
+          type: string
+          required: true
+        - name: page
+          in: path
+          description: "ページ番号"
+          required: true
+          type: integer
+        - name: limit
+          in: path
+          description: "取得件数"
+          required: true
+          type: integer
       responses:
         200:
           description: "successful operation"
           schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/Applicant"
+            $ref: "#/definitions/ApplicantList"
         400:
-          description: "Invalid tag value"
-  /person/list/search/{word}:
-    get:
-      tags:
-      - "applicants"
-      summary: "応募者フリーワード検索"
-      description: "応募者一覧取得 部分一致検索"
-      produces:
-      - "application/json"
-      parameters:
-      - in: path
-        name: "word"
-        description: "検索文字列"
-        required: true
-        type: "string"
-      responses:
-        200:
-          description: "successful operation"
-          schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/Applicant"
-        400:
-          description: "Invalid tag value"
+          description: "parameter error"
+        401:
+          description: "unauthorised token error"
+        422:
+          description: "unauthorised token error"
+        500:
+          description: "internal server error"
 definitions:
+  UserList:
+    type: "object"
+    example:
+      {
+        "users": [
+          {
+              "email": "eguchi@asial.co.jp",
+              "name": "eguchi"
+          }
+        ]
+      }
   Token:
     type: "object"
     example:
       message: Logged in as taro
       access_token: eyJ0eXAiOiJ...
       refresh_token: eyJ0eXAiOi...
+  
+  TokenRevoked:
+    type: "object"
+    example:
+      {
+        "message": "Access token has been revoked"
+      }
+  
+  UserRegist:
+    type: "object"
+    required:
+    - "username"
+    - "email"
+    - "password"
+    properties:
+      email:
+        type: "string"
+        example: "eguchi@asial.co.jp"
+      password:
+        type: "string"
+        example: "hogehogehoge"
+      username:
+        type: "string"
+        example: "asial"
       
   UserLogin:
     type: "object"
@@ -175,10 +293,7 @@ definitions:
       zip2:
         type: "integer"
         example: 1412
-      highschool:
-        type: "string"
-        example: "東京都立豊多摩高等学校"
-      university:
+      final_education:
         type: "string"
         example: "立教大学文学部史学科"
       reason:
@@ -199,13 +314,13 @@ definitions:
         format: binary
         example: "multipart form data"
 
-  Applicant:
+  ApplicantList:
     type: "object"
     required:
     - "name"
     - "address"
     properties:
-      applicant_id:
+      id:
         type: "integer"
         format: "int64"
       name:

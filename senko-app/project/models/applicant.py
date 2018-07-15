@@ -26,9 +26,9 @@ class ApplicantModel(db.Model):
 
 
     @classmethod
-    def return_all(cls):
+    def return_list(cls, limit, page):
         def to_json(x):
             return {
-                'name': x.username
+                'name': x.name
             }
-        return {"users": list(map(lambda x: to_json(x), cls.query.all()))}
+        return {"applicants": list(map(lambda x: to_json(x), cls.query.order_by(cls.created_at).paginate(page, limit).items))}

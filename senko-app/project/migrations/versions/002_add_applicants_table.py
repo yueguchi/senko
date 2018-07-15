@@ -7,8 +7,8 @@ meta = MetaData()
 applicants = Table(
         'applicants', meta,
         Column('id', Integer, primary_key=True, nullable=False),
-        Column('name', String(255), nullable=False, unique=True),
-        Column('email', String(255), nullable=False, unique=True),
+        Column('name', String(255), nullable=False, unique=False),
+        Column('email', String(255), nullable=False, unique=False),
         Column('sex', Integer, nullable=True),
         Column('birth', Date, nullable=True),
         Column('address', String(255), nullable=True),
