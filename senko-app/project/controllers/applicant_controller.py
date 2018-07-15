@@ -25,7 +25,7 @@ class ApplicantRegistration(Resource):
     @jwt_required
     def post(self):
         data = parser.parse_args()
-        resume_word = ''
+        janome_word = ''
         if 'resume1' in request.files:
             file = request.files['resume1']
             filePath = '/tmp/{}'.format(file.filename)
