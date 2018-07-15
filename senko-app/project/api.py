@@ -64,6 +64,7 @@ api.add_resource(user_controller.TokenRefresh, '/user/refresh')
 api.add_resource(user_controller.UserLogoutAccess, '/user/logout')
 # applicant
 api.add_resource(applicant_controller.ApplicantRegistration, '/applicant')
+api.add_resource(applicant_controller.ApplicantDelete, '/applicant/<int:applicant_id>')
 api.add_resource(applicant_controller.ApplicantList, '/applicant/<int:limit>/<int:page>')
 
 

@@ -11,7 +11,10 @@ parser.add_argument('name', help = 'This field cannot be blank', required = True
 parser.add_argument('sex', type=int, choices=[1,2])
 parser.add_argument('email', help = 'This field cannot be blank', required = True)
 parser.add_argument('birth', type=lambda x: datetime.strptime(x,'%Y-%m-%d'))
-
+parser.add_argument('address')
+parser.add_argument('zip1')
+parser.add_argument('zip2')
+parser.add_argument('final_education')
 
 """
 登録
@@ -30,12 +33,29 @@ class ApplicantRegistration(Resource):
             zip2 = data['zip2'] if 'zip2' in data else None,
             final_education = data['final_education'] if 'final_education' in data else None,
             reason = data['reason'] if 'reason' in data else None
+            # if 'resume1' in data else 
         )
         applicant.save_to_db()
 
         return {
             'message': 'Applicant {} was created'.format(data['name'])
         }, 201
+
+
+"""
+削除
+"""
+class ApplicantDelete(Resource):
+    @jwt_required
+    def delete(self, applicant_id):
+        targetApplicant = ApplicantModel.find_by_id(applicant_id)
+        if not targetApplicant:
+            return {'message': 'applicant_id {} doesn\'t exist'.format(applicant_id)}, 404
+        targetApplicant.delete_from_db()
+        return {
+            'message': 'Applicant {} was deleted'.format(targetApplicant.name)
+        }, 204
+
 
 """
 一覧ページング

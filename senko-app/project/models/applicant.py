@@ -25,6 +25,22 @@ class ApplicantModel(db.Model):
         db.session.commit()
 
 
+    """
+    削除
+    """
+    def delete_from_db(self):
+        db.session.delete(self)
+        db.session.commit()
+
+
+    """
+    id検索
+    """
+    @classmethod
+    def find_by_id(cls, applicantId):
+        return cls.query.filter_by(id = applicantId).first()
+
+
     @classmethod
     def return_list(cls, limit, page):
         def to_json(x):
