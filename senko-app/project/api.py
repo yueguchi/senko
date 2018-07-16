@@ -8,7 +8,7 @@ import os
 
 app = Flask(__name__)
 # TODO Originの検討
-cors = CORS(app, resources={r"/*": {"origins": "localhost:8082"}})
+cors = CORS(app)
 
 # JWT設定
 app.config['PROPAGATE_EXCEPTIONS'] = True
