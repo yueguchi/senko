@@ -1,11 +1,14 @@
 # [参考] https://codeburst.io/jwt-authorization-in-flask-c63c1acf4eeb
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager
 import os
 
 app = Flask(__name__)
+# TODO Originの検討
+cors = CORS(app, resources={r"/*": {"origins": "localhost:8082"}})
 
 # JWT設定
 app.config['PROPAGATE_EXCEPTIONS'] = True
