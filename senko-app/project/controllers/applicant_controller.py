@@ -7,6 +7,7 @@ from models.applicant import ApplicantModel
 from datetime import datetime
 from flask_jwt_extended import (jwt_required)
 from utils.file_util import convert_pdf_to_txt, get_noun_list_from_word
+import os
 
 parser = reqparse.RequestParser()
 parser.add_argument('name', help = 'This field cannot be blank', required = True)
@@ -32,6 +33,7 @@ class ApplicantRegistration(Resource):
             file.save(filePath)
             noun_list = get_noun_list_from_word(convert_pdf_to_txt(filePath))
             janome_word = ','.join(noun_list)
+            os.remove(filePath)
         applicant = ApplicantModel(
             name = data['name'],
             email = data['email'],
