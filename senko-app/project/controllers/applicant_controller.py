@@ -34,6 +34,7 @@ class ApplicantRegistration(Resource):
             noun_list = get_noun_list_from_word(convert_pdf_to_txt(filePath))
             janome_word = ','.join(noun_list)
             os.remove(filePath)
+
         applicant = ApplicantModel(
             name = data['name'],
             email = data['email'],
@@ -44,9 +45,9 @@ class ApplicantRegistration(Resource):
             zip2 = data['zip2'] if 'zip2' in data else None,
             final_education = data['final_education'] if 'final_education' in data else None,
             reason = data['reason'] if 'reason' in data else None,
-            janome_word = janome_word
         )
         applicant.save_to_db()
+        
 
         return {
             'message': 'Applicant {} was created'.format(data['name'])

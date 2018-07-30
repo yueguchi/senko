@@ -62,3 +62,7 @@ http://flask-sqlalchemy.pocoo.org/2.3/api/
 # python manage.py script "add hoges table"
 ```
 
+＃IAMのSECRET/ACCESS
+
+.env.exampleをcopyして、.envを作ってください。
+その中に然るべきACCESS_KEYとSECRET_KEYを設定してください。

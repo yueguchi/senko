@@ -29,6 +29,8 @@ services:
       - "DB_PASSWORD=password"
       - "DB_SECRET_KEY=secre-key-string"
       - "JWT_SECRET_KEY=hogehogehogeglocal"
+      - "AWS_ACCESS_KEY=${AWS_ACCESS_KEY}"
+      - "AWS_SECRET_KEY=${AWS_SECRET_KEY}"
     volumes:
       - ./senko-app/project:/project
     # dbコンテナが立ち上がってからappを立ち上げる
